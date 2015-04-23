@@ -11,6 +11,8 @@ The scripts are:
 
 * [make-xls-xlsx.rb](./make-xls-xlsx.rb) - Turns all xls spreadsheets in a folder and its subfolders into xlsx spreadsheets. Windows only. Requires Excel.
 * [check-for-external-links.rb](./check-for-external-links.rb) - Looks at all xlsx spreadsheets in a folder and subfolders and reports any links that are not relative (i.e., they start with C: or U: or some such). Only works on xlsx files, not xls
-* [make-external-links-relative.rb](make-external-links-relative.rb) - Looks at all xlsx spreadsheets in a folder and subfloders and changes any absolute links (i.e., they start with a C:) to relative links (i.e., they say that excel file is in the same folder, or a subfolder, or the folder above, as appropriate). Only works on xlsx files, not xls
+* [propose-replacements-for-external-links.rb](propose-replacements-for-external-links.rb) - Looks at all xlsx spreadsheets in a folder and subfloders and proposes changes to any absolute links (i.e., they start with a C:) to relative links (i.e., they say that excel file is in the same folder, or a subfolder, or the folder above, as appropriate). Only works on xlsx files, not xls. It also proposes converting links from .xls to .xlsx if a worksheet with the same name but more file format exists.
+* [make-replacements-for-external-links.rb](make-replacements-for-external-links.rb) - Takes the output from propose-replacements-for-external-links.rb and actually makes the changes
+
 
 
