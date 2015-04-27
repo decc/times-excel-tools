@@ -62,6 +62,12 @@ def replacement_for(external_reference)
   nil
 end
 
+def xlsx_replacement_for_xls(external_reference)
+  return nil unless external_reference.end_with?(".xls")
+  return external_reference.gsub(".xls", ".xlsx") if File.exist?(external_reference.gsub(".xls", ".xlsx"))
+  nil
+end
+
 paths_to_all_xlsx_files.each do |workbook|
 	next if workbook.basename.to_s.start_with?('~') # Temporary files created by excel should be ignored
 
@@ -82,7 +88,19 @@ paths_to_all_xlsx_files.each do |workbook|
             not_replaced[workbook.to_s][external_reference] = true
             not_replaced_count += 1
           end
+        else # We think it is already a relative link
+          possible_replacement = xlsx_replacement_for_xls(external_reference)
+          if possible_replacement
+            # This isn't essential, but might as well make them all consistent
+            relative_link = Pathname.new(possible_replacement).relative_path_from(workbook.parent).to_s
+            proposed_replacements[workbook][external_reference] = relative_link
+            replacement_count += 1
+          else
+            not_replaced[workbook.to_s][external_reference] = true
+            not_replaced_count += 1
+          end
         end
+
       end 
     end
   end
