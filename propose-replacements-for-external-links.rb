@@ -75,6 +75,7 @@ paths_to_all_xlsx_files.each do |workbook|
     link_files = spreadsheet.glob("xl/externalLinks/_rels/*") # We only care about the xml files that contain the external links
     link_files.each do |link_file|
       original = spreadsheet.read(link_file)
+
       original.scan(/Target="([^"]*)"/) do |match|
         external_reference = URI.unescape($1)
         case external_reference
@@ -89,9 +90,10 @@ paths_to_all_xlsx_files.each do |workbook|
             not_replaced_count += 1
           end
         else # We think it is already a relative link
-          possible_replacement = xlsx_replacement_for_xls(external_reference)
+          absolute_link = (workbook.parent+external_reference).to_s
+          possible_replacement = xlsx_replacement_for_xls(absolute_link)
           if possible_replacement
-            # This isn't essential, but might as well make them all consistent
+            # Need to turn it back into a relative link
             relative_link = Pathname.new(possible_replacement).relative_path_from(workbook.parent).to_s
             proposed_replacements[workbook][external_reference] = relative_link
             replacement_count += 1
