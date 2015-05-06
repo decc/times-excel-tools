@@ -1,7 +1,7 @@
  # Turns all xls spreadsheets in a folder and its subfolders into xlsx spreadsheets. Windows only. Requires Excel.
 require 'win32ole'
 excel = WIN32OLE.new('Excel.Application')
-dir = File.dirname(File.expand_path(__FILE__))
+dir = File.expand_path(File.dirname(ARGV[0] || '.'))
 puts dir
 excel.Visible = 1
 Dir.glob("**/*.xls").each do |workbook|
@@ -13,4 +13,3 @@ Dir.glob("**/*.xls").each do |workbook|
 	file.saveAs(new_name, 51)
 	file.Close
 end
-
