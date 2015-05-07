@@ -1,3 +1,7 @@
+# 2015-05-07
+
+* Add propose-replacements-for-external-links-for-versioned-files.rb to help alter references when eliminating version numbers on individual worksheets
+
 # 2015-05-06
 
 * make-xls-xlsx.rb can now operate on any folder, defaults to the current working directory
