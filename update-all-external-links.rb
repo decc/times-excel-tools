@@ -2,7 +2,7 @@
 require 'win32ole'
 excel = WIN32OLE.new('Excel.Application')
 dir = File.expand_path(File.dirname(ARGV[0] || '.'))
-number_of_iterations = ARGV[1] || 3
+number_of_iterations = ARGV[1] || 10 
 puts dir
 excel.Visible = 0
 excel.ScreenUpdating = 0
