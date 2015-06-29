@@ -1,3 +1,7 @@
+# 2015-06-29
+
+* Inhibit warnings in update-all-external-links.rb
+
 # 2015-06-15
 
 * Added update-all-external-links.rb which opens all the worksheets in a folder in turn, updates their external links, then cloese them.

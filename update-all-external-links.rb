@@ -6,6 +6,7 @@ number_of_iterations = ARGV[1].to_i || 12
 puts dir
 excel.Visible = 0
 excel.ScreenUpdating = 0
+excel.DisplayAlerts = 0
 number_of_iterations.times do 
 	Dir.glob("**/*.xls*").each do |workbook|
 		puts workbook
@@ -31,4 +32,5 @@ number_of_iterations.times do
 	end
 end
 excel.Visible = 1
+excel.DisplayAlerts = 1
 excel.ScreenUpdating = 1
