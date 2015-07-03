@@ -1,3 +1,7 @@
+# 2015-07-03
+
+* Added external-link-depth.rb and external-link-graph.rb
+
 # 2015-06-29
 
 * Inhibit warnings in update-all-external-links.rb
