@@ -4,6 +4,7 @@ excel = WIN32OLE.new('Excel.Application')
 dir = File.expand_path(File.dirname(ARGV[0] || '.'))
 excel.Visible = 0
 excel.ScreenUpdating = 0
+excel.DisplayAlerts = 0
 
 require 'tsort'
 
@@ -49,3 +50,4 @@ end
 	puts links.keys.map { |f| [f, depth(f, links)].join("\t") }.join("\n")
 excel.Visible = 1
 excel.ScreenUpdating = 1
+excel.DisplayAlerts = 1
