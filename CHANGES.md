@@ -2,6 +2,14 @@
 
 * Fixed a bug and added documentation to update-all-external-links.rb. The default number of passes has increased to 12.
 
+# 2015-07-03
+
+* Added external-link-depth.rb and external-link-graph.rb
+
+# 2015-06-29
+
+* Inhibit warnings in update-all-external-links.rb
+
 # 2015-06-15
 
 * Added update-all-external-links.rb which opens all the worksheets in a folder in turn, updates their external links, then cloese them.
