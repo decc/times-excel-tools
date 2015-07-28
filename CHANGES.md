@@ -1,3 +1,7 @@
+# 2015-07-28
+
+* Fixed depth scanning to cope with absent files linked. Added export of list depth as TSV.
+
 # 2015-06-16
 
 * Fixed a bug and added documentation to update-all-external-links.rb. The default number of passes has increased to 12.
