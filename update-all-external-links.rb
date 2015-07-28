@@ -21,7 +21,7 @@
 require 'win32ole'
 excel = WIN32OLE.new('Excel.Application')
 dir = File.expand_path(File.dirname(ARGV[0] || '.'))
-number_of_iterations = ARGV[1] ? ARGV[1].to_i : 12
+number_of_iterations = ARGV[1] ? ARGV[1].to_i : 8
 puts dir
 puts "Number of iterations: #{number_of_iterations}"
 excel.Visible = 0
