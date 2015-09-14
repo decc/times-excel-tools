@@ -10,8 +10,11 @@ excel.AutomationSecurity = msoAutomationSecurityForceDisable
 
 
 dir = File.expand_path(File.dirname(ARGV[0] || '.'))
-puts "Scanning files for depth of reference link nesting..."
+$dirx = dir+"/"
 
+puts "Scanning files for depth of reference link nesting..."
+puts $dirx.gsub!('/','\\')
+	
 require 'tsort'
 
 class Hash
@@ -25,19 +28,23 @@ end
 links = {}
 missing = {}
 empties = []
+$parents = []
+targets =[]
 
-def depth(name, links, stack = [])
+def depth(name, links, ff, stack = [])
 	stack << name
-	#puts name
 	return 0 unless links.key?(name) # catches linked filenames which are not found
 	children = links[name]
 	return 0 if children.none? # catches [nil] as well as []
-	#puts "-> 	"
+	$parents << name.to_s
+	ff.puts name.gsub('/','\\').sub($dirx,"")
+	ff.puts "-> 	"
 	#puts "   	#{children}\n"
 	max_depth = 0
 	children.each do |child|
+		ff.puts  "   	#{child.gsub('/','\\').sub($dirx,"")}\n"
 		next if stack.include?(child)
-		child_depth = depth(child, links, stack)
+		child_depth = depth(child, links, ff, stack)
 		if child_depth > max_depth
 			max_depth = child_depth
 		end
@@ -60,6 +67,7 @@ end
 		file = excel.Workbooks.Open(name, 0)
 		external_links = excel.ActiveWorkbook.LinkSources
 		if external_links
+			targets += external_links
 			found_links, missing_links = external_links.partition { |f| File.exist?(f) }
 			links[File.absolute_path(name).gsub('/','\\')] = found_links
 			#puts "- Links found: #{found_links.count}"
@@ -77,9 +85,9 @@ end
 	puts "\n\nMissing links in these files:"
 
 	missing.keys.each do |miss|
-		puts "\n",miss
+		puts "\n",miss.gsub('/','\\').sub($dirx,"")
 		missing[miss].each do |gone|
-			puts "-> MISSING #{gone} "
+			puts "-> MISSING #{gone.gsub('/','\\').sub($dirx,"")} "
 		end
 	end
 	
@@ -88,16 +96,37 @@ end
 	
 	puts "\nDepth traverse:"
 	
-	mymax=0
-	depths = links.keys.map { |f| [f, depth(f, links)]}
-	depths.each{ |_,n| mymax=n if n>mymax }
-
-	puts "Max depth = #{mymax}"
+	File.open("links.txt","w") do |ff|
+		mymax=0
+		depths = links.keys.map { |f| [f, depth(f, links, ff)]}
+		depths.each{ |_,n| mymax=n if n>mymax }
+		puts "Max depth = #{mymax}"
+	end
+	
+	$parents.sort!.uniq!
+	puts "\n#{$parents.count} workbooks have links to other files."
+	
+	puts "\n#{links.keys.count} links between workbooks (and to external files)"
+	if links.keys.count !=links.values.count then puts "(Mismatched no. of keys and values)" end
+	
+	File.open("depth-files-with-external-links.txt","w") do |ff|
+		$parents.each do |s|
+			ff.puts s.sub($dirx,"").gsub('\\','/')
+		end
+	end
 	
 	File.open("link-map.tsv","w") do |ff|
-      ff.puts links.keys.map { |f| [f, depth(f, links)].join("\t") }.join("\n")
+		File.open("nil","w") do |fnil|
+			ff.puts links.keys.map { |fn| [fn, depth(fn, links, fnil)].join("\t") }.join("\n")
+		end
     end
 
+	File.open("unique-depth.txt","w") do |f|
+		targets.sort!.uniq!
+		targets.each do |t|
+			f.puts "#{t.gsub('/','\\').sub($dirx,"")}"
+		end
+	end
 	puts "Written file links-map.tsv "
 	excel.Visible = 1
 	excel.ScreenUpdating = 1

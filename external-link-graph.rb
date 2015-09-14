@@ -1,6 +1,8 @@
 # This writes out link-graph.html which shows the links between all the spreadsheets in a folder
 # More for fun than for any practical value
 
+# Edited Philip Sargent 2015-09-013
+
 output_filename = 'link-graph.html'
 
 require 'win32ole'
@@ -8,6 +10,7 @@ require 'json'
 
 links = []
 nodes = []
+used_nodes=[]
 
 excel = WIN32OLE.new('Excel.Application')
 dir = File.expand_path(File.dirname(ARGV[0] || '.'))
@@ -15,11 +18,14 @@ dir = File.expand_path(File.dirname(ARGV[0] || '.'))
 excel.Visible = 0
 excel.ScreenUpdating = 0
 excel.DisplayAlerts = 0
+i = 0
 
 Dir.glob(File.join(dir,"**/*.xls*")).each do |workbook|
 	path = File.absolute_path(workbook).gsub('/','\\')
 	name = File.basename(path, '.*').downcase
 	nodes << {name: name, path: path}
+	i=i+1
+	print "\r#{i}\tworkbooks scanned "
 	next if name.start_with?('~')
 	file = excel.Workbooks.Open(path, 0)
 	external_links = excel.ActiveWorkbook.LinkSources 
@@ -41,7 +47,11 @@ def normalise(path)
 end
 
 $node_lookup = {}
+
+puts "\n#{nodes.count}\ttotal nodes"
 nodes.uniq!
+puts "#{nodes.count}\tunique nodes"
+puts "#{links.count}\tlinks"
 
 nodes.each.with_index do |node,i|
 	$node_lookup[normalise(node[:path])] = i
@@ -60,6 +70,26 @@ reformatted_links = links.map do |link|
 		value: link[:value]
 	}
 end
+
+links.each do |link|
+	used_nodes << lookup(link[:source])
+	used_nodes << lookup(link[:target])
+end
+
+# puts "#{used_nodes.count}\ttotal nodes in links"
+used_nodes.uniq!
+puts "#{used_nodes.count}\tunique nodes in links"
+
+# Now look for nodes that are neither sources nor targets, and try remove them from the nodes list?
+nodes.each.with_index do |node,i|
+	unless used_nodes.include?($node_lookup[normalise(node[:path])])
+		# puts "#{node[:path]}\tnot part of any link"
+		# nodes.delete(node)	
+	end
+end
+
+# We can't simply remove them from the nodes list as the numbering seems to be implicitly used by d3
+# so we would need to renumber everything.
 
 html =<<END
 <!DOCTYPE html>

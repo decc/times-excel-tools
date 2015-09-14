@@ -26,6 +26,9 @@ require 'zip' # xlsx files are zip files full of xml
 require 'pathname' # Makes manipulating paths easier
 require 'uri' # The links are encoded as urls
 
+wsheets = []
+targets =[]
+
 paths_to_all_xlsx_files = Dir.glob("**/*.xlsx").map { |s| Pathname.new(s) } # *.xlsx means all xlsx files **/ means in all subfolders. This returns the url for each excel file in turn
 
 proposed_replacements = Hash.new { |hash, key| hash[key] = {} }
@@ -124,4 +127,29 @@ File.open("external-links-not-replaced.tsv","w") do |f|
       f.puts "#{worksheet}\t#{original}"
     end
   end
+end
+
+File.open("files-with-external-links.tsv","w") do |f|
+  not_replaced.each do |worksheet, references|
+    wsheets<<worksheet.to_s   
+	references.each do |r, _|
+		targets<<r.to_s
+	end
+  end
+  proposed_replacements.each do |worksheet, replacements|
+    wsheets<<worksheet.to_s  
+	replacements.each do |r, _|
+		targets<<r.to_s
+	end
+  end
+  f.puts wsheets
+ end
+puts "#{wsheets.count} files with references. They are listed in files-with-external-links.tsv"
+
+
+File.open("unique-propose.txt","w") do |f|
+  targets.sort!.uniq!
+  targets.each do |t|
+      f.puts "#{t}"
+    end
 end
