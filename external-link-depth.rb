@@ -1,5 +1,7 @@
  # Scans for external links in a folder tree of spreadsheet files. Requires Excel.
  # Edited Philip Sargent, 28 July 2015
+ # updated 2015-0915
+ 
 require 'win32ole'
 excel = WIN32OLE.new('Excel.Application')
 excel.Visible = 0

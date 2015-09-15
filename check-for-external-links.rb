@@ -13,6 +13,8 @@
 # in which case it will ONLY show the file:/// and http:// https:// external links. OK.
 # Philip Sargent 2015/09/06
 
+# updated 2015-0915
+
 require 'zip'
 
 wsheets = []

@@ -1,7 +1,8 @@
 # This writes out link-graph.html which shows the links between all the spreadsheets in a folder
 # More for fun than for any practical value
 
-# Edited Philip Sargent 2015-09-013
+# Edited Philip Sargent 2015-09-13
+# updated 2015-0915
 
 output_filename = 'link-graph.html'
 
