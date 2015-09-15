@@ -1,3 +1,7 @@
+# 2015-09-15
+
+* Deprecated the depth-scanning tool and created a new one which uses the Tarjan algorithm to find circular loops in the dependency network. Updates to other tools to improve useful information outputs.
+
 # 2015-07-28
 
 * Fixed depth scanning to cope with absent files linked. Added export of list depth as TSV.
