@@ -7,6 +7,8 @@
 # By default it opens them all 12 times, because that is the maximum chain length 
 # in the UK TIMES energy model.
 #
+# Originally written by Tom Counsell
+#
 # Usage:
 # ruby path/to/whereever/this/is/update-all-external-links.rb
 #
@@ -18,6 +20,8 @@
 #
 # ruby path/to/whereever/this/is/update-all-external-links.rb directory/with/the/spreadsheets number-of-times-to-update
 #
+#	Philip Sargent 23 Aug.2015
+
 require 'win32ole'
 excel = WIN32OLE.new('Excel.Application')
 dir = File.expand_path(File.dirname(ARGV[0] || '.'))
@@ -27,14 +31,20 @@ puts "Number of iterations: #{number_of_iterations}"
 excel.Visible = 0
 excel.ScreenUpdating = 0
 excel.DisplayAlerts = 0
+
+durits = []
+empties={}
+
 timer = Time.now.to_i
 iter = 0
 number_of_iterations.times do
 	iter = iter+1
+	timit = Time.now.to_i
 	Dir.glob("**/*.xls*").each do |workbook|
 		puts workbook
 		name = File.join(dir,workbook).gsub('/','\\')
 		next if File.basename(name).start_with?('~')
+		next if empties[name]=="empty"
 		file = excel.Workbooks.Open(name, 0)
 		external_links = excel.ActiveWorkbook.LinkSources
 		if external_links
@@ -49,13 +59,23 @@ number_of_iterations.times do
 				excel.Calculate
 				file.Save
 			end
+		else
+			empties[name]="empty"
 		end
+		
 		file.Close
 		puts
 	end
+	durit = Time.now.to_i - timit
+	puts "Did #{iter}  in #{durit} secs."
+	durits[iter]=durit
+
 end
 duration = Time.now.to_i - timer
 puts "Finished #{number_of_iterations} iterations in #{duration} secs."
+File.open("durations.txt","w") do |ff|
+      ff.puts durits 
+end
 excel.Visible = 1
 excel.DisplayAlerts = 1
 excel.ScreenUpdating = 1

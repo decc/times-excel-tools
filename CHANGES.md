@@ -1,3 +1,7 @@
+# 2015-09-16
+
+* Added "this code is broken" text to output files and terminal output when external-link-depth.rb is run.
+
 # 2015-09-15
 
 * Deprecated the depth-scanning tool and created a new one which uses the Tarjan algorithm to find circular loops in the dependency network. Updates to other tools to improve useful information outputs.
