@@ -56,14 +56,14 @@ File.open("check-links.tsv","w") do |ff|
 end
 
 
-puts "#{wsheets.uniq!.count} files with references. They are listed in check-files-external-links.txt"
-File.open("check-files-external-links.txt","w") do |f|
+puts "#{wsheets.uniq!.count} files with references. They are listed in check-parents.txt"
+File.open("check-parents.txt","w") do |f|
   wsheets.sort!
   f.puts wsheets
 end
 
-File.open("unique-check.txt","w") do |f|
+File.open("check-targets.txt","w") do |f|
   targets.sort!.uniq!
   f.puts targets
 end
-puts "#{targets.count} Referenced files. They are listed in unique-check.txt"
+puts "#{targets.count} Referenced files. They are listed in check-targets.txt"
