@@ -5,16 +5,15 @@
 # calculating the depth of the link tree.
 #
 
-# TO DO - fix the folder formatting so that targets are in the same format as parents - otherwise Tsort can't do its stuff.
-# TO DO as we are interested in the link graph, EXCLUDE all the file:/// and http:// links.
+# As we are interested in the link graph of local files only, EXCLUDE all the file:/// and http:// links.
 
-# Written by Philip Sargent 2015 09 06
-#
+# Originally written by Philip Sargent 2015 09 06
+# updated 2015-09-15 PMS
 
 require 'zip' # xlsx files are zip files full of xml
 require 'pathname' # Makes manipulating paths easier
 require 'uri' # The links are encoded as urls
-
+require 'digest'
 require 'tsort'
 
 class TsortableHash < Hash
@@ -33,14 +32,18 @@ puts $dirx.gsub!('/','\\')
 
 parents = []
 skips=[]
+fullpaths = {}
+cksums = {}
 
 arcs = TsortableHash.new
-#arcs = Hash.new
 i=0
 
 # NOTE: this skips .xlsm files because they may have password-protected macros and thus will not be readable.
 # Hence the number of files seen does not match those searched for using *.xls* 
+
 Dir.glob("**/*.xls*").each do |workbook|
+	cksums[workbook] = Digest::SHA2.file(workbook).hexdigest 
+
 	name = File.basename(workbook)
 	i=i+1
 	print "\r#{i}\tworkbooks scanned "
@@ -48,7 +51,7 @@ Dir.glob("**/*.xls*").each do |workbook|
 		skips<<name
 		next
 	end
-	if name.end_with?('xlsm') # Macro files are ignored - though probably should not be...
+	if name.end_with?('xlsm') # Macro files are ignored - though probably should not be in general..! OK in UK TIMES I hope.
 		skips<<name
 		next
 	end
@@ -56,6 +59,7 @@ Dir.glob("**/*.xls*").each do |workbook|
 		Zip::File.open(workbook) do |subfile|
 			parent = File.basename(workbook, '.*').downcase.gsub(/%20/,' ')
 			# parent = workbook.to_s.gsub(/%20/,' ')
+			fullpaths[parent]=workbook.gsub(/%20/,' ')
 
 			targets =[]
 			subfile.glob("xl/externalLinks/_rels/*").each do |link|
@@ -63,21 +67,27 @@ Dir.glob("**/*.xls*").each do |workbook|
 				t = URI.unescape(t)
 				unless t =~ /^\w+:/ # keeps http:// and file:// targets as full pathnames but DO NOT add to graph
 					parents << parent
-					t = File.basename(t, '.*').downcase
-					targets << t
+					tb = File.basename(t, '.*').downcase
+					targets << tb
 					arcs[parent] = targets
 				end						
 			end
 		end
-	rescue Exception => e
+	rescue Exception => e # This happens if it can't open a .xlsm file
 		puts "\nEXCEPTION\n#{workbook}"
 		puts e
 	end
 end
 puts "\n"
 
+File.open("cksums.tsv","w") do |f|
+	cksums.each do |w,ck|
+		f.puts "#{w}\t#{ck}"
+	end
+end
+
 parents.sort!.uniq!
-puts "#{parents.count}\tworkbooks have links to other files."
+puts "#{parents.count}\tworkbooks have links to other local files."
 File.open("explore-parents.tsv","w") do |f|
   parents.sort!
   f.puts parents
@@ -121,7 +131,7 @@ File.open("links-explore.tsv","w") do |f|
 	end
 end
 
-puts "#{lc}\ttotal number of links between local files."
+puts "#{lc}\ttotal number of direct links between local files."
 
 # Now ensure that every target is also in the hash
 newarcs.each do |a|
@@ -138,8 +148,17 @@ end
 
 # Using the Tsort methods will expose cyclic depdendency
 begin # start exception block
-	puts "\nStrongly connected components:"
-	arcs.each_strongly_connected_component do |p,t|
+	nl=0
+	puts "\nStrongly connected components aka cyclic dependencies (with more than one member):"
+	# arcs.each_strongly_connected_component {|scc| p scc }
+	arcs.each_strongly_connected_component do |scc| # iterates through arrays of nodes
+		if scc.length > 1 then 
+			nl = nl +1 
+			puts "\nCyclic loop #{nl}:"
+			scc.each do |g|
+				printf "   %-40s %s\n",  g, fullpaths[g]
+			end
+		end
 		#puts "parent:#{p}"
 		#puts "\ttargets: #{t}"
 	end

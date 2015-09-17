@@ -20,9 +20,11 @@
 #
 # ruby path/to/whereever/this/is/update-all-external-links.rb directory/with/the/spreadsheets number-of-times-to-update
 #
-#	Philip Sargent 23 Aug.2015
+# 2015-09-16 PMS
 
 require 'win32ole'
+require 'digest'
+
 excel = WIN32OLE.new('Excel.Application')
 dir = File.expand_path(File.dirname(ARGV[0] || '.'))
 number_of_iterations = ARGV[1] ? ARGV[1].to_i : 8
@@ -34,6 +36,7 @@ excel.DisplayAlerts = 0
 
 durits = []
 empties={}
+cksums = {}
 
 timer = Time.now.to_i
 iter = 0
@@ -41,6 +44,7 @@ number_of_iterations.times do
 	iter = iter+1
 	timit = Time.now.to_i
 	Dir.glob("**/*.xls*").each do |workbook|
+		cksums[workbook] = Digest::SHA2.file(workbook).hexdigest
 		puts workbook
 		name = File.join(dir,workbook).gsub('/','\\')
 		next if File.basename(name).start_with?('~')
@@ -69,6 +73,12 @@ number_of_iterations.times do
 	durit = Time.now.to_i - timit
 	puts "Did #{iter}  in #{durit} secs."
 	durits[iter]=durit
+	
+	File.open("cksums-#{iter}.tsv","w") do |f|
+	cksums.each do |w,ck|
+		f.puts "#{w}\t#{ck}"
+	end
+end
 
 end
 duration = Time.now.to_i - timer
