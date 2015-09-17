@@ -15,6 +15,8 @@ dir = File.expand_path(File.dirname(ARGV[0] || '.'))
 $dirx = dir+"/"
 
 puts "Scanning files for depth of reference link nesting..."
+puts "This code is BROKEN - do NOT believe the results."
+
 puts $dirx.gsub!('/','\\')
 	
 require 'tsort'
@@ -100,9 +102,11 @@ end
 	
 	File.open("links.txt","w") do |ff|
 		mymax=0
+		ff.puts "This code is BROKEN - do NOT believe the results."
 		depths = links.keys.map { |f| [f, depth(f, links, ff)]}
 		depths.each{ |_,n| mymax=n if n>mymax }
 		puts "Max depth = #{mymax}"
+		ff.puts "This code is BROKEN - do NOT believe the results."
 	end
 	
 	$parents.sort!.uniq!
@@ -112,24 +116,28 @@ end
 	if links.keys.count !=links.values.count then puts "(Mismatched no. of keys and values)" end
 	
 	File.open("depth-files-with-external-links.txt","w") do |ff|
-		$parents.each do |s|
+			ff.puts "This code is BROKEN - do NOT believe the results."
+			$parents.each do |s|
 			ff.puts s.sub($dirx,"").gsub('\\','/')
 		end
 	end
 	
 	File.open("link-map.tsv","w") do |ff|
-		File.open("nil","w") do |fnil|
+		File.open("NUL","w") do |fnil|
 			ff.puts links.keys.map { |fn| [fn, depth(fn, links, fnil)].join("\t") }.join("\n")
 		end
     end
 
 	File.open("unique-depth.txt","w") do |f|
+		f.puts "This code is BROKEN - do NOT believe the results."
 		targets.sort!.uniq!
 		targets.each do |t|
 			f.puts "#{t.gsub('/','\\').sub($dirx,"")}"
 		end
+		f.puts "This code is BROKEN - do NOT believe the results."
 	end
 	puts "Written file links-map.tsv "
+	puts "This code is BROKEN - do NOT believe the results."
 	excel.Visible = 1
 	excel.ScreenUpdating = 1
 	excel.DisplayAlerts = 1
