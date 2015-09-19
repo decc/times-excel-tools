@@ -10,9 +10,9 @@
 require 'win32ole'
 
 excel = WIN32OLE.new('Excel.Application')
-excel.Visible = 1
-excel.ScreenUpdating = 1
-excel.DisplayAlerts = 1
+excel.Visible = 0
+excel.ScreenUpdating = 0
+excel.DisplayAlerts = 0
 
 dir = File.expand_path(File.dirname(ARGV[0] || '.'))
 puts "\n#{dir}"
