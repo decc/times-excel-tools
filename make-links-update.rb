@@ -16,6 +16,7 @@ excel.DisplayAlerts = 0
 
 dir = File.expand_path(File.dirname(ARGV[0] || '.'))
 puts "\n#{dir}"
+dir = dir.gsub('/','\\')+"\\"
 
 topolist =[]
 
@@ -53,7 +54,10 @@ topolist.each do |workbook|
 			end
 			unless found_links.empty?
 				puts "Updating using #{found_links.length} external link(s):"
-				puts found_links
+				found_links.each do |k|
+					puts k.gsub(dir,'')
+				end
+				
 				excel.ActiveWorkbook.UpdateLink( 'Name' => found_links )
 				#excel.ActiveWorkbook.UpdateLink
 				excel.Calculate
