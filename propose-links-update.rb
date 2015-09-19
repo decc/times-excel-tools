@@ -300,10 +300,12 @@ end
 	
 newtopo.flatten!
 
-puts "\nTopological sorted filelist in topolist.tsv"
+puts "\nTopological sorted filelist (only parents not just targets)in topolist.tsv"
 File.open("topolist.tsv","w") do |f|
 	newtopo.each do |n|
-		f.puts "#{n}\t#{fullpaths[n]}"
+		if parents.include?(n)
+			f.puts "#{fullpaths[n]}"
+		end
 	end
 end
 
