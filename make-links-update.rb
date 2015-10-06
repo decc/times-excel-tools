@@ -62,6 +62,7 @@ topolist.each do |workbook|
 				#excel.ActiveWorkbook.UpdateLink
 				excel.Calculate
 				file.Save
+				file.Close
 			end
 		end
 	end
