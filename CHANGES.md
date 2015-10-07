@@ -1,3 +1,7 @@
+# 2015-10-07
+
+* Updated propose-links-update & make-links-update to update all workbooks which take updates - in the right order.
+
 # 2015-09-16
 
 * Added "this code is broken" text to output files and terminal output when external-link-depth.rb is run.
