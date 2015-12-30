@@ -1,3 +1,7 @@
+# 2015-12-30
+
+* Deleted the deprecated external-link-depth.rb
+
 # 2015-10-07
 
 * Updated propose-links-update & make-links-update to update all workbooks which take updates - in the right order.
