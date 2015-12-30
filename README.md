@@ -18,4 +18,4 @@ The scripts are:
 * [external-link-graph](external-link-graph.rb)Creates an HTML file with JavaScript using the D3 library to make a force graph showing the dependencies between all the .xlsx files.
 * [make-xls-xlsx.rb](./make-xls-xlsx.rb) - Turns all xls spreadsheets in a folder and its subfolders into xlsx spreadsheets. Windows only. Requires Excel.
 * [check-for-external-links.rb](./check-for-external-links.rb) - Looks at all xlsx spreadsheets in a folder and subfolders and reports any links that are not relative (i.e., they start with C: or U: or some such, or are foreign in that they are http://). This list should be checked for local references to files which are only present on your own machine. Only works on xlsx files, not xls
-* [external-link-depth](external-link-depth.rb) - DEPRECATED Attempts to measure the nesting depth of the update graph. It fails to do this and the algorithm is completely broken, but it does produce output listing missing files which are linked from the files examined.
+
