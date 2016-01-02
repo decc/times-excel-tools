@@ -1,3 +1,7 @@
+# 2016-01-02
+
+* Published digestxlsx.rb - a tool to calculate cryptographic SHA256 digests of Excel files and their component zipped subfiles.
+
 # 2015-12-30
 
 * Deleted the deprecated external-link-depth.rb
