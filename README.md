@@ -6,7 +6,7 @@ To use, please install:
 
 1. The [Ruby scripting language](www.ruby-lang.org) . These have been devloped with ruby 2.1
 2. The [rubyzip Gem](http://rubyzip.sourceforge.net) - (usually by `gem install rubyzip`)
-3. The [digest gem], [choice gem], [base64 gem], [pathname gem],  [uri gem]
+3. The [choice gem]
 
 The scripts are:
 
