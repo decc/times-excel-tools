@@ -12,7 +12,7 @@ The scripts are:
 
 ## [propose-replacements-for-external-links.rb](propose-replacements-for-external-links.rb) 
 
-Looks at all xlsx spreadsheets in a folder and subfloders and proposes changes to any absolute links (i.e., they start with a C:) to relative links (i.e., they say that excel file is in the same folder, or a subfolder, or the folder above, as appropriate). Only works on xlsx files, not xls. It also proposes converting links from .xls to .xlsx if a worksheet with the same name but more file format exists.
+Looks at all xlsx spreadsheets in a folder and subfloders and proposes changes to any absolute links (i.e., they start with a `C:`) to relative links (i.e., they say that excel file is in the same folder, or a subfolder, or the folder above, as appropriate). Only works on xlsx files, not xls. It also proposes converting links from .xls to .xlsx if a worksheet with the same name but more file format exists.
 
 Example output:
 
@@ -22,7 +22,7 @@ Example output:
 
 ## [make-replacements-for-external-links.rb](make-replacements-for-external-links.rb) 
 
-Takes the output from propose-replacements-for-external-links.rb and actually makes the changes. You can hand-edit the  external-links-to-be-replaced.tsv (produced earlier) so that this script makes those replacements too. This is commonly used to turn ephemeral links, e.g. to file:\\\Q:\.. into dummy links file:\\\A:\.. so that machines which do not have a Q drive do not produce different results from those which do.
+Takes the output from `propose-replacements-for-external-links.rb` and actually makes the changes. You can hand-edit the  `external-links-to-be-replaced.tsv` (produced earlier) so that this script makes those replacements too. This is commonly used to turn ephemeral links, e.g. to `file:\\\Q:\..` into dummy links `file:\\\A:\..` so that machines which do not have a `Q:` drive do not produce different results from those which do.
 
 ## [propose-links-update] (propose-links-update.rb) 
 
