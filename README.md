@@ -12,7 +12,7 @@ The scripts are:
 
 ## [propose-replacements-for-external-links.rb](propose-replacements-for-external-links.rb) 
 
-Looks at all xlsx spreadsheets in a folder and subfloders and proposes changes to any absolute links (i.e., they start with a `C:`) to relative links (i.e., they say that excel file is in the same folder, or a subfolder, or the folder above, as appropriate). Only works on xlsx files, not xls. It also proposes converting links from .xls to .xlsx if a worksheet with the same name but more file format exists.
+Looks at all xlsx spreadsheets in a folder and subfloders and proposes changes to any absolute links (i.e., they start with a `C:`) to relative links (i.e., they say that excel file is in the same folder, or a subfolder, or the folder above, as appropriate). Only works on xlsx files, not xls. It also proposes converting links from .xls to .xlsx if a worksheet with the same name but more file format exists. Should be executed in the top level folder of the model because replacements will be proposed only if a correspnding file can be fond under the folder where the script is run.
 
 Example output:
 
